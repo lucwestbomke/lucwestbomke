@@ -1,6 +1,7 @@
 <template>
   <div id="IndexPage">
     <Header />
+    Test
   </div>
 </template>
 <script setup lang="ts">
