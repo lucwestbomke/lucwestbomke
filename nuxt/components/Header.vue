@@ -1,199 +1,155 @@
 <template>
   <header id="HeaderComponent">
-    <div class="name_wrapper">
-      <h1>Luc Westbomke</h1>
-    </div>
-    <nav class="nav_wrapper">
-      <div id="nav_menu" :class="{ open: nav_open }">
-        <div id="nav_menu_btn" @click="nav_open = !nav_open">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <div class="nav_burger_links">
-          <ul>
-            <li>Home</li>
-            <li>Isadora</li>
-            <li>RNN GAN</li>
-            <li>CNN GAN</li>
-            <li>About Me</li>
-          </ul>
-        </div>
+    <h1>Luc Westbomke</h1>
+    <nav :class="{ active: nav_active }">
+      <img id="menu_background" src="@/assets/images/menu_slide_radial.svg" aria-hidden="true" alt="menu_background" />
+      <div class="bg_darken"></div>
+      <div id="nav_menu_btn" @click="nav_active = !nav_active">
+        <span></span>
+        <span></span>
+        <span></span>
       </div>
-      <div id="nav_menu_bg" :class="{ open: nav_open }"></div>
-      <div id="nav_links_wrapper">
-        <ul>
-          <li>Projects</li>
-          <li>About Me</li>
-        </ul>
-      </div>
+      <ul>
+        <li>Home</li>
+        <li>Isadora</li>
+        <li>Melissa</li>
+        <li>Taylor</li>
+        <li>Projects</li>
+        <li>About</li>
+      </ul>
     </nav>
   </header>
 </template>
 <script setup lang="ts">
-const nav_open = ref(false);
+const nav_active = ref(false);
 </script>
 <style scoped lang="scss">
 #HeaderComponent {
-  height: 80px;
+  height: 100px;
+  align-items: center;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  .name_wrapper {
-    text-align: center;
-    color: $white;
-    z-index: 2;
+  h1 {
+    font-size: 28px;
+    z-index: 4;
   }
-  .nav_wrapper {
-    #nav_menu {
+  nav {
+    // position: relative;
+    overflow: hidden;
+    #nav_menu_btn {
+      cursor: pointer;
+      height: 33px;
+      position: relative;
+      transform: rotate(0deg);
+      transition: 0.5s ease-in-out;
+      width: 40px;
+      z-index: 4;
+      span {
+        background-color: $white;
+        border-radius: 9px;
+        display: block;
+        height: 5px;
+        left: 0;
+        opacity: 1;
+        position: absolute;
+        transform: rotate(0deg);
+        transition: 0.25s ease-in-out;
+        transform-origin: left center;
+        width: 100%;
+        &:nth-child(1) {
+          top: 0px;
+        }
+        &:nth-child(2) {
+          top: 12px;
+        }
+        &:nth-child(3) {
+          top: 24px;
+        }
+      }
+    }
+    #menu_background {
+      height: 0;
+      position: fixed;
+      top: 0;
+      right: 0;
+      // right: -400px;
+      // transform: scale(2);
+      transition: all 500ms;
+      // top: -400px;
+      overflow: hidden;
+      // background: rgba(0 0 0 / 0.5);
+      z-index: 4;
+    }
+    .bg_darken {
+      background-color: transparent;
+      height: 100vh;
+      left: 0;
+      position: fixed;
+      top: 0;
+      transition: all 300ms;
+      width: 100vw;
+      z-index: 0;
+    }
+    ul {
+      transition: all 300ms;
       display: flex;
       flex-direction: column;
+      margin-top: -80px;
+      position: fixed;
+      right: -160px;
+      row-gap: 52px;
+      text-align: center;
+      transform: rotate(20deg);
+      // margin-top: 80px;
+      // right: 40px;
+      z-index: 4;
+      li {
+        font-size: 24px;
+      }
+    }
+    &.active {
       #nav_menu_btn {
-        z-index: 2;
-        width: 40px;
-        height: 33px;
-        position: relative;
-        -webkit-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-        -webkit-transition: 0.5s ease-in-out;
-        -moz-transition: 0.5s ease-in-out;
-        -o-transition: 0.5s ease-in-out;
-        transition: 0.5s ease-in-out;
-        cursor: pointer;
         span {
-          background-color: $white;
-          display: block;
-          position: absolute;
-          height: 5px;
-          width: 100%;
-          border-radius: 9px;
-          opacity: 1;
-          left: 0;
-          -webkit-transform: rotate(0deg);
-          -moz-transform: rotate(0deg);
-          -o-transform: rotate(0deg);
-          transform: rotate(0deg);
-          -webkit-transition: 0.25s ease-in-out;
-          -moz-transition: 0.25s ease-in-out;
-          -o-transition: 0.25s ease-in-out;
-          transition: 0.25s ease-in-out;
-          -webkit-transform-origin: left center;
-          -moz-transform-origin: left center;
-          -o-transform-origin: left center;
-          transform-origin: left center;
           &:nth-child(1) {
+            transform: rotate(45deg);
             top: 0px;
+            left: 8px;
           }
           &:nth-child(2) {
-            top: 12px;
+            width: 0%;
+            opacity: 0;
           }
           &:nth-child(3) {
-            top: 24px;
+            transform: rotate(-45deg);
+            top: 29px;
+            left: 8px;
           }
         }
       }
-      &.open {
-        #nav_menu_btn {
-          position: relative;
-          span {
-            &:nth-child(1) {
-              -webkit-transform: rotate(45deg);
-              -moz-transform: rotate(45deg);
-              -o-transform: rotate(45deg);
-              transform: rotate(45deg);
-              top: 0px;
-              left: 3px;
-            }
-            &:nth-child(2) {
-              width: 0%;
-              opacity: 0;
-            }
-            &:nth-child(3) {
-              -webkit-transform: rotate(-45deg);
-              -moz-transform: rotate(-45deg);
-              -o-transform: rotate(-45deg);
-              transform: rotate(-45deg);
-              top: 29px;
-              left: 3px;
-            }
-          }
-        }
-        .nav_burger_links {
-          padding-right: 20px;
-          position: fixed;
-          top: 120px;
-          width: 200px;
-          right: 0;
-          text-align: center;
-          ul {
-            display: flex;
-            flex-direction: column;
-            row-gap: 36px;
-            li {
-              color: $white;
-              font-size: 22px;
-              transition: 0.5s ease-in-out;
-            }
-          }
-        }
+      #menu_background {
+        height: 100vh;
+        // right: -00px;
+        // top: -00px;
+        // background: rgba(0 0 0 / 0.2);
+        transform: scale(1.5);
       }
-      .nav_burger_links {
-        z-index: 2;
-        ul {
-          display: none;
-        }
+      .bg_darken {
+        background-color: rgba(0 0 0 / 0.9);
+        z-index: 3;
       }
-    }
-    #nav_menu_bg {
-      z-index: 1;
-      width: 0;
-      height: 0;
-      background: radial-gradient(circle, $primary, $primary-lighten);
-      border-radius: 50%;
-      transition: 0.3s ease;
-      position: fixed;
-      top: -100px;
-      right: -100px;
-      overflow: hidden;
-      &.open {
-        top: -100px;
-        right: 60px;
-        width: 650px;
-        height: 720px;
-        transform: translate(70%, -10%);
-      }
-    }
-    #nav_links_wrapper {
       ul {
-        display: none;
+        margin-top: 80px;
+        right: 40px;
+        transform: rotate(0deg);
+        position: absolute;
       }
     }
   }
 }
-
-@media screen and (min-width: 768px) {
+@media (min-width: 425px) {
   #HeaderComponent {
-    justify-content: space-around;
-    .nav_wrapper {
-      #nav_menu {
-        display: none;
-      }
-      #nav_links_wrapper {
-        ul {
-          display: flex;
-          column-gap: 72px;
-          align-items: center;
-          height: 100%;
-          margin-top: 3px;
-          li {
-            color: $white;
-            font-size: 28px;
-          }
-        }
-      }
+    h1 {
+      font-size: 32px;
     }
   }
 }
