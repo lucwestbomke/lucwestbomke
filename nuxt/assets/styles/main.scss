@@ -14,6 +14,9 @@ ul {
 li {
   list-style-type: none;
 }
+a {
+  text-decoration: none;
+}
 [id$="Page"] {
   min-height: calc(100vh);
 }

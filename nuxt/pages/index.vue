@@ -1,12 +1,14 @@
 <template>
   <div id="IndexPage">
-    <span class="cards" @mousemove="moveRadialHover">
+    <div class="cards" @mousemove="moveRadialHover">
       <nav class="nav">
         <div class="card name">
           <div class="card-border"></div>
-          <div class="card-content">
-            <h1>Luc Westbomke</h1>
-          </div>
+          <nuxt-link to="/" draggable="false">
+            <div class="card-content">
+              <h1>Luc Westbomke</h1>
+            </div>
+          </nuxt-link>
         </div>
         <div class="card list">
           <div class="card-border"></div>
@@ -45,20 +47,28 @@
         <div class="card picture">
           <div class="card-border"></div>
           <div
-            v-for="(image, index) in images"
+            v-for="(images, index) in projectsData.images"
             :key="index"
             class="card-content"
-            v-show="Math.abs(currentIndex) % images.length === index"
+            v-show="Math.abs(currentIndex) % projectsData.images.length === index"
           >
-            <img :src="image" draggable="false" width="700" height="500" alt="alt text" />
+            <div
+              v-for="(image, index2) in images"
+              :key="index2"
+              v-show="Math.abs(imageIndex) % images.length === index2"
+            >
+              <nuxt-link :to="projectsData.links[index]" draggable="false">
+                <img :src="image" class="project-img" draggable="false" height="500" alt="alt text" />
+              </nuxt-link>
+            </div>
           </div>
         </div>
         <div class="card description">
           <div class="card-border" id="description"></div>
           <div
-            v-for="(description, index) in descriptions"
+            v-for="(description, index) in projectsData.descriptions"
             :key="index"
-            v-show="Math.abs(currentIndex) % descriptions.length === index"
+            v-show="Math.abs(currentIndex) % projectsData.descriptions.length === index"
             class="card-content"
           >
             <h2>{{ description }}</h2>
@@ -68,12 +78,14 @@
       <div class="card title">
         <div class="card-border"></div>
         <div
-          v-for="(title, index) in titles"
+          v-for="(title, index) in projectsData.titles"
           :key="index"
-          v-show="Math.abs(currentIndex) % titles.length === index"
+          v-show="Math.abs(currentIndex) % projectsData.titles.length === index"
           class="card-content"
         >
-          <h1>{{ title }}</h1>
+          <nuxt-link :to="projectsData.links[index]" draggable="false">
+            <h1>{{ title }}</h1>
+          </nuxt-link>
         </div>
       </div>
       <div class="card slide_left" @click="currentIndex--">
@@ -118,24 +130,16 @@
           />
         </div>
       </div>
-    </span>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
+// const { projectData } = ();
+const data = useProjectData();
+const projectsData = ref(extractValues(data.value));
+
 const currentIndex = ref(0);
-const images = ref([
-  "https://picsum.photos/700/500",
-  "https://picsum.photos/702/502",
-  "https://picsum.photos/703/503",
-  "https://picsum.photos/704/505",
-]);
-const titles = ref(["Isadora", "Melissa", "Taylor", "Luc"]);
-const descriptions = ref([
-  "Artificial intelligence, or AI, is a rapidly growing field that involves the development of computer programs and systems that can perform tasks typically requiring human intelligence. AI is being used in a wide range of applications, from autonomous vehicles and robotics to natural language processing and image recognition. As AI technology continues to advance, it is expected to transform many industries and create new opportunities for businesses and individuals alike. However, there are also concerns about the potential impact of AI on jobs, privacy, and security, and these issues will need to be carefully addressed as the technology continues to evolve.",
-  "One of the most exciting aspects of artificial intelligence is its potential to help solve some of the world's most pressing problems, such as climate change, disease, and poverty. AI can be used to analyze vast amounts of data, identify patterns and trends, and make predictions that can inform decision-making and policy development. However, there are also risks associated with AI, such as the potential for biases to be built into algorithms and the ethical implications of using AI to make decisions that affect people's lives.",
-  "AI is a rapidly evolving field that is poised to have a major impact on society in the coming years. From self-driving cars to virtual assistants, AI is already being used in a wide range of applications, and its potential uses are virtually limitless. However, there are also concerns about the ethical implications of AI, such as the potential for it to be used in ways that violate privacy or discriminate against certain groups of people. As AI continues to develop, it will be important to ensure that its benefits are shared fairly and that its risks are carefully managed.",
-  "As artificial intelligence becomes more advanced, it is likely to have a profound impact on the workforce. Some experts predict that AI will lead to significant job displacement, as machines become increasingly capable of performing tasks that were previously done by humans. However, others argue that AI will create new jobs and opportunities, particularly in areas such as data analysis, software development, and robotics. Regardless of its impact on the labor market, it is clear that AI will be an important driver of economic growth and innovation in the years to come.",
-]);
+const imageIndex = ref(0);
 
 function moveRadialHover(e: MouseEvent) {
   for (const el of document.getElementsByClassName("card")) {
@@ -160,6 +164,13 @@ function returnLink(site: "github" | "linkedin" | "twitter") {
   // window.open(link, "_blank")!.focus();
   return link;
 }
+// watchEffect(() => {
+//   console.log(imageIndex.value);
+// });
+
+// setInterval(() => {
+//   imageIndex.value++;
+// }, 1 * 1000);
 </script>
 <style scoped lang="scss">
 .cards {
@@ -216,21 +227,22 @@ function returnLink(site: "github" | "linkedin" | "twitter") {
     user-select: none;
     .card-content {
       column-gap: 48px;
-      p {
-      }
     }
   }
   .contact {
     grid-area: contact;
     .card-content {
       text-align: center;
-      text-decoration: none;
+      // text-decoration: none;
     }
   }
   .picture {
     grid-area: picture;
     .card-content {
       user-select: none;
+      .project-img {
+        border-radius: $border-radius;
+      }
     }
   }
   .description {
@@ -238,9 +250,12 @@ function returnLink(site: "github" | "linkedin" | "twitter") {
     overflow-y: hidden;
     .card-content {
       align-items: start;
-      overflow-y: auto;
-      padding: 48px;
-      max-height: 100%;
+      padding: 48px 0px 48px 48px;
+      h2 {
+        max-height: 100%;
+        overflow-y: auto;
+        padding-right: 48px;
+      }
     }
   }
   .title {
