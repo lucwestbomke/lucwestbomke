@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    apiUrl: "http://api:9988",
     public: {
       siteUrl: process.env.SITE_URL || "https://lucwestbomke.dev",
     },

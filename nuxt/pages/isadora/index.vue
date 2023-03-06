@@ -135,6 +135,7 @@
   </div>
 </template>
 <script setup lang="ts">
+const { reshapeData, postImageData } = useIsadora();
 const showResult = ref(false);
 
 const isPainting = ref(false);
@@ -147,8 +148,6 @@ const offsetTop = ref(0);
 
 const canvasEl = ref<HTMLCanvasElement>();
 const context = ref<CanvasRenderingContext2D>();
-
-const { reshapeData } = useIsadora();
 
 function startPainting(e: MouseEvent) {
   if (mode.value === "fill") fill(e);
@@ -219,9 +218,12 @@ function saveImage() {
   const Uint8Data = context.value!.getImageData(0, 0, canvasEl.value!.width, canvasEl.value!.height).data;
   const data = Array.from(Uint8Data);
   const calldata = {
-    data: reshapeData(removeEveryFourthElement(data)),
+    image_data: reshapeData(removeEveryFourthElement(data)),
   };
   console.log(calldata);
+  postImageData(calldata).then((res: any) => {
+    console.log(res);
+  });
   // postAPICall(calldata).then((res: any) => {
   //   console.log(res);
   //   image_id.value = res.image_id;
