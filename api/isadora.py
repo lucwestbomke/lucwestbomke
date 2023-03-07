@@ -8,11 +8,6 @@ import os
 import json
 from uuid import uuid4
 
-
-def handle_post(image):
-
-  return result
-
 def createIsadoraNet():
   class isaNet(nn.Module):
     def __init__(self):
@@ -20,24 +15,28 @@ def createIsadoraNet():
 
       self.conv1 = nn.Conv2d(3, 16, kernel_size=5, stride=1, padding=0)
       self.maxPool1 = nn.MaxPool2d(4, 4)
+      self.bnorm1 = nn.BatchNorm2d(16)
 
       conv1SizeV = (np.floor((540 + 2 * 0 - 5 / 1)) + 1) // 4
       conv1SizeH = (np.floor((960 + 2 * 0 - 5 / 1)) + 1) // 4
 
       self.conv2 = nn.Conv2d(16, 32, kernel_size=5, stride=1, padding=1)
       self.maxPool2 = nn.MaxPool2d(3, 3)
+      self.bnorm2 = nn.BatchNorm2d(32)
 
       conv2SizeV = (np.floor((conv1SizeV + 2 * 1 - 5) / 1) + 1) // 3
       conv2SizeH = (np.floor((conv1SizeH + 2 * 1 - 5) / 1) + 1) // 3
 
       self.conv3 = nn.Conv2d(32, 36, kernel_size=3, stride=1, padding=1)
       self.maxPool3 = nn.MaxPool2d((2, 3))
+      self.bnorm3 = nn.BatchNorm2d(36)
 
       conv3SizeV = (np.floor((conv2SizeV + 2 * 1 - 3) / 1) + 1) // 2
       conv3SizeH = (np.floor((conv2SizeH + 2 * 1 - 3) / 1) + 1) // 3
 
       self.conv4 = nn.Conv2d(36, 40, kernel_size=3, stride=1, padding=0)
       self.maxPool4 = nn.MaxPool2d((2, 3))
+      self.bnorm4 = nn.BatchNorm2d(40)
 
       conv4SizeV = (np.floor((conv3SizeV + 2 * 0 - 3) / 1) + 1) // 2
       conv4SizeH = (np.floor((conv3SizeH + 2 * 0 - 3) / 1) + 1) // 3
@@ -50,15 +49,15 @@ def createIsadoraNet():
       self.out = nn.Linear(50, 6)
 
     def forward(self, x):
-      # x = F.relu( self.maxPool1( self.conv1( x ) ) )
-      # x = F.relu( self.maxPool2( self.conv2( x ) ) )
-      # x = F.relu( self.maxPool3( self.conv3( x ) ) )
-      # x = F.relu( self.maxPool4( self.conv4( x ) ) )
+      x = F.relu( self.bnorm1( self.maxPool1( self.conv1( x ) ) ) )
+      x = F.relu( self.bnorm2( self.maxPool2( self.conv2( x ) ) ) )
+      x = F.relu( self.bnorm3( self.maxPool3( self.conv3( x ) ) ) )
+      x = F.relu( self.bnorm4( self.maxPool4( self.conv4( x ) ) ) )
 
-      x = self.maxPool1(F.relu(self.conv1(x)))
-      x = self.maxPool2(F.relu(self.conv2(x)))
-      x = self.maxPool3(F.relu(self.conv3(x)))
-      x = self.maxPool4(F.relu(self.conv4(x)))
+      # x = self.maxPool1(F.relu(self.conv1(x)))
+      # x = self.maxPool2(F.relu(self.conv2(x)))
+      # x = self.maxPool3(F.relu(self.conv3(x)))
+      # x = self.maxPool4(F.relu(self.conv4(x)))
 
       nUnits = x.shape.numel() / x.shape[0]
       x = x.view(-1, int(nUnits))
@@ -66,7 +65,7 @@ def createIsadoraNet():
       x = F.relu(self.fc1(x))
       x = F.relu(self.fc2(x))
       x = F.relu(self.fc3(x))
-      x = self.out(x)
+      x = F.relu(self.out(x))
       # x = F.softmax( self.out( x ) )
 
       return x
@@ -79,10 +78,34 @@ def createIsadoraNet():
 
   return net, lossfun, optimizer
 
+
+isaNet = createIsadoraNet()[0]
+
+categories = ["space", "ocean", "human", "landscape", "animal", "house"]
+
+redis_host = os.environ.get("REDIS_HOST", "127.0.0.1")
+redis_password = os.environ.get("REDIS_PASSWORD")
+redis_port = int(os.environ.get("REDIS_PORT"))
+
+r = redis.Redis(host=redis_host, port=redis_port, db=0, password=redis_password)
+
+
+def handle_post(image):
+  dataT = image_transpose_tensor(image)
+  # return dataT.shape
+  dataT = dataT.unsqueeze(0)
+  yHat = isaNet(dataT)
+  result = get_result(yHat)
+  image_id = save_image_redis(dataT)
+  result["image_id"] = image_id
+
+  return result
+
+def handle_patch(data):
+  add_categorie_redis(data.isadora_image_id, data.category)
+
 def image_transpose_tensor(rgba_image):
   image_array = np.array(rgba_image)
-  # image_array = image_array.reshape((-1, 3))
-  # image_array = image_array.reshape((540, 960, 3))
   image_array = image_array.transpose((2, 0, 1))
 
   return torch.tensor(image_array).float()
@@ -105,14 +128,6 @@ def get_result(net_output):
         "house": list[5],
     },
   }
-
-categories = ["space", "ocean", "human", "landscape", "animal", "house"]
-
-redis_host = os.environ.get("REDIS_HOST", "127.0.0.1")
-redis_password = os.environ.get("REDIS_PASSWORD")
-redis_port = int(os.environ.get("REDIS_PORT"))
-
-r = redis.Redis(host=redis_host, port=redis_port, db=0, password=redis_password)
 
 def save_tensors_pickle(tensors):
   try:
@@ -140,8 +155,8 @@ def save_image_redis(tensor):
     raise ConnectionError
   return id
 
-def add_categorie_redis(id: str, categorie: float):
+def add_categorie_redis(id: str, category: float):
   try:
-    r.hset(id, "category", categorie)
+    r.hset(id, "category", category)
   except:
     raise ConnectionError

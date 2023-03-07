@@ -135,7 +135,7 @@
   </div>
 </template>
 <script setup lang="ts">
-const { reshapeData, postImageData } = useIsadora();
+const { reshapeData, postImageData, useIsadoraImageURL } = useIsadora();
 const showResult = ref(false);
 
 const isPainting = ref(false);
@@ -216,13 +216,14 @@ onBeforeMount(() => {
 // });
 function saveImage() {
   const Uint8Data = context.value!.getImageData(0, 0, canvasEl.value!.width, canvasEl.value!.height).data;
-  const data = Array.from(Uint8Data);
+  const data: number[] = Array.from(Uint8Data);
   const calldata = {
     image_data: reshapeData(removeEveryFourthElement(data)),
   };
   console.log(calldata);
   postImageData(calldata).then((res: any) => {
     console.log(res);
+    console.log(useIsadoraImageURL().value);
   });
   // postAPICall(calldata).then((res: any) => {
   //   console.log(res);

@@ -26,7 +26,7 @@ export default function useIsadora() {
         ...data,
       },
     });
-    useIsadoraImageURL().value = res.isadora_image_id;
+    useIsadoraImageURL().value = res.image_id;
     return res;
   }
   async function patchImageData(data: IsadoraPostData) {

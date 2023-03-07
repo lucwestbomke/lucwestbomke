@@ -1,0 +1,72 @@
+version: "3.8"
+services:
+  nuxt:
+    image: deepsight-dev-nuxt:latest
+    build:
+      context: ./nuxt
+      dockerfile: ../config/nuxt/Dockerfile.dev
+    container_name: nuxt-dev
+    command: pnpm run dev
+    volumes:
+      - type: bind
+        source: ./nuxt
+        target: /app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+      - "24678:24678"
+    stdin_open: true
+    tty: true
+  api:
+    image: deepsight-dev-api:latest
+    build:
+      context: ./api
+      dockerfile: ../config/api/Dockerfile.dev
+    container_name: api-dev
+    env_file:
+      - ./.env
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_HOST=redis
+    command: uvicorn main:app --host 0.0.0.0 --port 9988 --reload
+    volumes:
+      - type: bind
+        source: ./api
+        target: /code
+    ports:
+      - "9988:9988"
+  nginx:
+    image: deepsight-dev-nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: ../config/nginx/Dockerfile.dev
+    container_name: nginx-dev
+    volumes:
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+  redis:
+    image: deepsight-dev-redis:latest
+    build:
+      context: ./redis
+      dockerfile: ../config/redis/Dockerfile.dev
+    container_name: redis-dev
+    env_file:
+      - ./.env
+    # environment:
+    #   - REDIS_PASSWORD=${REDIS_PASSWORD}
+    #   - REDIS_PORT=${REDIS_PORT}
+    command: redis-server --port ${REDIS_PORT} --requirepass ${REDIS_PASSWORD} --save
+    volumes:
+      - type: volume
+        source: redis_img_db
+        target: /data
+    ports:
+      - "6379:6379"
+    depends_on:
+      - api
+volumes:
+  redis_img_db:

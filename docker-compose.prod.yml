@@ -1,0 +1,34 @@
+version: "3.8"
+services:
+  nuxt:
+    image: deepsight-prod-nuxt:latest
+    build:
+      context: ./nuxt
+      dockerfile: ../config/nuxt/Dockerfile.prod
+    container_name: nuxt-prod
+    restart: always
+    command: sh -c "node .output/server/index.mjs"
+    stdin_open: true
+    tty: true
+  api:
+    image: deepsight-prod-api:latest
+    build:
+      context: ./api
+      dockerfile: ../config/api/Dockerfile.prod
+    container_name: api-prod
+    restart: always
+    command: uvicorn main:app --host 0.0.0.0 --port 9988
+    depends_on:
+      - nuxt
+  nginx:
+    image: deepsight-prod-nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: ../config/nginx/Dockerfile.prod
+    container_name: nginx-prod
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - nuxt
+      - api
