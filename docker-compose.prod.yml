@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   nuxt:
-    image: deepsight-prod-nuxt:latest
+    image: lucwestbomke-prod-nuxt:latest
     build:
       context: ./nuxt
       dockerfile: ../config/nuxt/Dockerfile.prod
@@ -11,7 +11,7 @@ services:
     stdin_open: true
     tty: true
   api:
-    image: deepsight-prod-api:latest
+    image: lucwestbomke-prod-api:latest
     build:
       context: ./api
       dockerfile: ../config/api/Dockerfile.prod
@@ -21,7 +21,7 @@ services:
     depends_on:
       - nuxt
   nginx:
-    image: deepsight-prod-nginx:latest
+    image: lucwestbomke-prod-nginx:latest
     build:
       context: ./nginx
       dockerfile: ../config/nginx/Dockerfile.prod

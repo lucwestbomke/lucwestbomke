@@ -3,7 +3,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "Comfortaa", Arial, Helvetica, sans-serif;
-  font-variation-settings: "wght" 400;
+  font-variation-settings: "wght" 700;
 }
 body {
   background-color: $bg-color;
@@ -17,8 +17,8 @@ li {
 a {
   text-decoration: none;
 }
-[id$="Page"] {
-  min-height: calc(100vh);
+[id$="Layout"] {
+  min-height: 100vh;
 }
 h1,
 h2,
@@ -28,12 +28,12 @@ h5,
 h6,
 li,
 p {
-  color: $white;
+  color: $black;
 }
 
-::-webkit-scrollbar-track {
-  background: $black;
-}
-::-webkit-scrollbar-thumb {
-  background: $black-lighten;
-}
+// ::-webkit-scrollbar-track {
+//   background: $black;
+// }
+// ::-webkit-scrollbar-thumb {
+//   background: $black-lighten;
+// }

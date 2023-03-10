@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   nuxt:
-    image: deepsight-dev-nuxt:latest
+    image: lucwestbomke-dev-nuxt:latest
     build:
       context: ./nuxt
       dockerfile: ../config/nuxt/Dockerfile.dev
@@ -18,7 +18,7 @@ services:
     stdin_open: true
     tty: true
   api:
-    image: deepsight-dev-api:latest
+    image: lucwestbomke-dev-api:latest
     build:
       context: ./api
       dockerfile: ../config/api/Dockerfile.dev
@@ -37,7 +37,7 @@ services:
     ports:
       - "9988:9988"
   nginx:
-    image: deepsight-dev-nginx:latest
+    image: lucwestbomke-dev-nginx:latest
     build:
       context: ./nginx
       dockerfile: ../config/nginx/Dockerfile.dev
@@ -49,7 +49,7 @@ services:
     ports:
       - "80:80"
   redis:
-    image: deepsight-dev-redis:latest
+    image: lucwestbomke-dev-redis:latest
     build:
       context: ./redis
       dockerfile: ../config/redis/Dockerfile.dev

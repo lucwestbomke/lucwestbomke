@@ -14,7 +14,6 @@ app = FastAPI()
 @app.post("/api/isadora")
 async def isadora(data: data):
   result = hpoi(data.image_data)
-  # result = { "api": "works" }
   return result
 
 @app.patch("/api/isadora")
