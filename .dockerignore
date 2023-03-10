@@ -1,0 +1,8 @@
+**/node_modules
+**/.gitignore
+**/.nuxt
+**/.output
+**/.dockerignore
+**/.npmrc
+**/__pycache__
+**/README.md

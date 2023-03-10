@@ -1,41 +1,36 @@
 <template>
   <header id="HeaderComponent">
     <h1>Luc Westbomke</h1>
-    <nav :class="{ active: nav_active }">
-      <img id="menu_background" src="@/assets/images/menu_slide_radial.svg" aria-hidden="true" alt="menu_background" />
-      <div class="bg_darken"></div>
-      <div id="nav_menu_btn" @click="nav_active = !nav_active">
+    <nav :class="{ open: nav_open }">
+      <div id="nav_menu_btn" @click="nav_open = !nav_open">
         <span></span>
         <span></span>
         <span></span>
       </div>
       <ul>
-        <li>Home</li>
-        <li>Isadora</li>
-        <li>Melissa</li>
-        <li>Taylor</li>
+        <li>About Me</li>
         <li>Projects</li>
-        <li>About</li>
+        <li>Contact</li>
+        <li>Github</li>
       </ul>
     </nav>
   </header>
 </template>
 <script setup lang="ts">
-const nav_active = ref(false);
+const nav_open = ref(false);
 </script>
 <style scoped lang="scss">
 #HeaderComponent {
-  height: 100px;
   align-items: center;
+  background-image: linear-gradient(to bottom, transparent 50%, $storm 50%);
+  background-size: 100% 200%;
   display: flex;
   justify-content: space-between;
-  h1 {
-    font-size: 28px;
-    z-index: 4;
-  }
+  margin-left: -20px;
+  padding: 20px;
+  transition: all 300ms;
+  width: calc(100% + 40px);
   nav {
-    // position: relative;
-    overflow: hidden;
     #nav_menu_btn {
       cursor: pointer;
       height: 33px;
@@ -43,9 +38,8 @@ const nav_active = ref(false);
       transform: rotate(0deg);
       transition: 0.5s ease-in-out;
       width: 40px;
-      z-index: 4;
       span {
-        background-color: $white;
+        background-color: $black;
         border-radius: 9px;
         display: block;
         height: 5px;
@@ -67,47 +61,21 @@ const nav_active = ref(false);
         }
       }
     }
-    #menu_background {
-      height: 0;
-      position: fixed;
-      top: 0;
-      right: 0;
-      // right: -400px;
-      // transform: scale(2);
-      transition: all 500ms;
-      // top: -400px;
-      overflow: hidden;
-      // background: rgba(0 0 0 / 0.5);
-      z-index: 4;
-    }
-    .bg_darken {
-      background-color: transparent;
-      height: 100vh;
-      left: 0;
-      position: fixed;
-      top: 0;
-      transition: all 300ms;
-      width: 100vw;
-      z-index: 0;
-    }
     ul {
-      transition: all 300ms;
       display: flex;
       flex-direction: column;
-      margin-top: -80px;
-      position: fixed;
-      right: -160px;
+      right: -600px;
       row-gap: 52px;
+      position: fixed;
+      top: 160px;
       text-align: center;
-      transform: rotate(20deg);
-      // margin-top: 80px;
-      // right: 40px;
-      z-index: 4;
+      transition: all 300ms;
+      width: 100%;
       li {
         font-size: 24px;
       }
     }
-    &.active {
+    &.open {
       #nav_menu_btn {
         span {
           &:nth-child(1) {
@@ -126,30 +94,30 @@ const nav_active = ref(false);
           }
         }
       }
-      #menu_background {
-        height: 100vh;
-        // right: -00px;
-        // top: -00px;
-        // background: rgba(0 0 0 / 0.2);
-        transform: scale(1.5);
-      }
-      .bg_darken {
-        background-color: rgba(0 0 0 / 0.9);
-        z-index: 3;
-      }
       ul {
-        margin-top: 80px;
-        right: 40px;
-        transform: rotate(0deg);
-        position: absolute;
+        right: 0;
+        position: fixed;
       }
     }
   }
+  &:has(nav.open) {
+    align-items: start;
+    background-position: 0% -100%;
+    height: 100vh;
+  }
 }
-@media (min-width: 425px) {
+
+@media (min-width: 1024px) {
   #HeaderComponent {
-    h1 {
-      font-size: 32px;
+    nav {
+      #nav_menu_btn {
+        display: none;
+      }
+      ul {
+        flex-direction: row;
+        position: static;
+        column-gap: 24px;
+      }
     }
   }
 }
