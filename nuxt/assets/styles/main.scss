@@ -3,7 +3,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: "Comfortaa", Arial, Helvetica, sans-serif;
-  font-variation-settings: "wght" 700;
+  font-variation-settings: "wght" 400;
 }
 body {
   background-color: $bg-color;
@@ -17,9 +17,9 @@ li {
 a {
   text-decoration: none;
 }
-[id$="Layout"] {
-  min-height: 100vh;
-}
+// [id$="Layout"] {
+//   min-height: 100vh;
+// }
 h1,
 h2,
 h3,
@@ -28,7 +28,7 @@ h5,
 h6,
 li,
 p {
-  color: $black;
+  color: $white;
 }
 
 // ::-webkit-scrollbar-track {

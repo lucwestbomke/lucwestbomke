@@ -18,12 +18,22 @@ $salmon: #fb7ea8;
 $rose: #fb2576;
 $white: #feefdd;
 $black: #171313;
-$bg-color: $white;
-// $bg-color: #08080c;
+// $bg-color: $white;
+$bg-color: #08080c;
 
 @font-face {
   font-family: "Comfortaa";
   src: local("Comfortaa"), url("@/assets/styles/fonts/comfortaa-variable.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: local("Manrope"), url("@/assets/styles/fonts/manrope-variable.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PlusJakarta";
+  src: local("PlusJakarta"), url("@/assets/styles/fonts/plus_jakarta_sans-variable.ttf") format("truetype");
   font-display: swap;
 }
 // https://coolors.co/08080c-160052-3f0071-fb2576-feefdd
