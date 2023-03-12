@@ -1,6 +1,6 @@
 <template>
-  <div id="CardsComponent">
-    <div
+  <section id="CardsComponent">
+    <article
       class="card"
       :class="{ first: index === currentIndex }"
       v-for="(project, index) in projectsData"
@@ -17,9 +17,9 @@
     >
       <!-- <h2>{{ project.title }}</h2> -->
       <!-- <p>{{ project.description.substring(0, 300) }}</p> -->
-      <img :src="project.images[0]" alt="" draggable="false" />
-    </div>
-  </div>
+      <img :src="project.images[0]" alt="" width="700" draggable="false" />
+    </article>
+  </section>
 </template>
 <script setup lang="ts">
 const data = useProjectData();
@@ -52,12 +52,12 @@ function increaseCurrentIndex() {
 function activateSwipe(event: MouseEvent | TouchEvent) {
   if (animationInProgress.value) return;
   isSwipeActive.value = true;
-  if (event instanceof TouchEvent) {
+  if (window.TouchEvent && event instanceof TouchEvent) {
     initialMousePosition.value = {
       x: event.touches[0].clientX,
       y: event.touches[0].clientY,
     };
-  } else if (event instanceof MouseEvent) {
+  } else if (window.MouseEvent && event instanceof MouseEvent) {
     initialMousePosition.value = {
       x: event.clientX,
       y: event.clientY,
@@ -74,7 +74,7 @@ function swipe(event: MouseEvent | TouchEvent) {
     x: 0,
     y: 0,
   };
-  if (event instanceof TouchEvent) {
+  if (window.TouchEvent && event instanceof TouchEvent) {
     dPos = {
       x: event.touches[0].clientX - currentMousePosition.value.x,
       y: event.touches[0].clientY - currentMousePosition.value.y,
@@ -83,7 +83,7 @@ function swipe(event: MouseEvent | TouchEvent) {
       x: event.touches[0].clientX,
       y: event.touches[0].clientY,
     };
-  } else if (event instanceof MouseEvent) {
+  } else if (window.MouseEvent && event instanceof MouseEvent) {
     dPos = {
       x: event.clientX - currentMousePosition.value.x,
       y: event.clientY - currentMousePosition.value.y,
@@ -113,7 +113,7 @@ function swipe(event: MouseEvent | TouchEvent) {
   };
   card.style.left = `${dx + dPos.x}px`;
   // card.style.top = `${dy + dPos.y}px`;
-  // card.style.top = `${(1 / 10) * Math.abs(dx + dPos.x)}px`;
+  // card.style.top = `${(1 / 100) * Math.abs(dx + dPos.x)}px`;
   card.style.transform = dPos.x > 0 ? "rotate(6deg)" : "rotate(-6deg)";
   card.style.filter = darkenTransform();
 }
@@ -267,10 +267,10 @@ onMounted(() => {
     transform: translate(-1600px, 0px) scale(0);
   }
   50% {
-    transform: translate(-1600px, 0px) scale(1);
+    transform: translate(-1600px, 0px) scale(0);
   }
   to {
-    transform: translate(0px, 0px);
+    transform: translate(0px, 0px) scale(1);
     left: unset;
     top: unset;
     z-index: -1;
@@ -289,10 +289,10 @@ onMounted(() => {
     transform: translate(1000px, 0px) scale(0);
   }
   50% {
-    transform: translate(1000px, 0px) scale(1);
+    transform: translate(1000px, 0px) scale(0);
   }
   to {
-    transform: translate(0px, 0px);
+    transform: translate(0px, 0px) scale(1);
     left: unset;
     top: unset;
     z-index: 0;

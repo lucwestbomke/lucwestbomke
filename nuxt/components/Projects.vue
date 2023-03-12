@@ -1,10 +1,10 @@
 <template>
-  <div id="ProjectsComponent">
-    <div class="project" v-for="(project, index) in projectsData" :class="{ active: index === currentIndex }">
-      <h2>{{ project.title }}</h2>
-      <h3>{{ project.intro }}</h3>
-    </div>
-  </div>
+  <section id="ProjectsComponent">
+    <article class="project" v-for="(project, index) in projectsData" :class="{ active: index === currentIndex }">
+      <header>{{ project.title }}</header>
+      <p>{{ project.intro }}</p>
+    </article>
+  </section>
 </template>
 <script setup lang="ts">
 const data = useProjectData();
@@ -21,14 +21,14 @@ currentIndex.value = projectsData.value.length - 1;
     opacity: 0;
     position: absolute;
     transition: opacity 0ms;
-    h2 {
+    header {
       display: inline-block;
       font-family: "PlusJakarta", Arial, Helvetica, sans-serif;
       font-size: 18px;
       font-variation-settings: "wght" 700;
       text-transform: uppercase;
     }
-    h3 {
+    p {
       cursor: pointer;
       display: inline-block;
       font-size: 48px;

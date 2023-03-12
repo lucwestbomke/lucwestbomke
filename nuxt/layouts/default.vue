@@ -22,6 +22,7 @@
   // }
   #FooterComponent {
     flex: 0 1 40px;
+    color: $white;
   }
 }
 @media (min-width: 768px) {

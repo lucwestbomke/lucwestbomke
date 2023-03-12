@@ -27,13 +27,24 @@ h4,
 h5,
 h6,
 li,
-p {
+p,
+header,
+span {
   color: $white;
 }
 
-// ::-webkit-scrollbar-track {
-//   background: $black;
-// }
-// ::-webkit-scrollbar-thumb {
-//   background: $black-lighten;
-// }
+@font-face {
+  font-family: "Comfortaa";
+  src: local("Comfortaa"), url("@/assets/styles/fonts/comfortaa-variable.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: local("Manrope"), url("@/assets/styles/fonts/manrope-variable.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PlusJakarta";
+  src: local("PlusJakarta"), url("@/assets/styles/fonts/plus_jakarta_sans-variable.ttf") format("truetype");
+  font-display: swap;
+}

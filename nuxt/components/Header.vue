@@ -1,6 +1,8 @@
 <template>
   <header id="HeaderComponent" ref="header">
-    <h1>Luc Westbomke</h1>
+    <nuxt-link to="/" rel="canonical">
+      <h1>Luc Westbomke</h1>
+    </nuxt-link>
     <nav :class="{ open: nav_open }">
       <div id="nav_menu_btn" @click="toggleNav">
         <span></span>
