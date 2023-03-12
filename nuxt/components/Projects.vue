@@ -1,10 +1,10 @@
 <template>
-  <section id="ProjectsComponent">
+  <div id="ProjectsComponent">
     <article class="project" v-for="(project, index) in projectsData" :class="{ active: index === currentIndex }">
       <header>{{ project.title }}</header>
       <p>{{ project.intro }}</p>
     </article>
-  </section>
+  </div>
 </template>
 <script setup lang="ts">
 const data = useProjectData();
@@ -15,11 +15,13 @@ currentIndex.value = projectsData.value.length - 1;
 <style scoped lang="scss">
 #ProjectsComponent {
   width: 100%;
+  min-height: 300px;
   .project {
     display: flex;
     flex-direction: column;
     opacity: 0;
-    position: absolute;
+    // position: absolute;
+    position: fixed;
     transition: opacity 0ms;
     header {
       display: inline-block;
@@ -29,7 +31,7 @@ currentIndex.value = projectsData.value.length - 1;
       text-transform: uppercase;
     }
     p {
-      cursor: pointer;
+      cursor: default;
       display: inline-block;
       font-size: 48px;
       font-variation-settings: "wght" 700;
@@ -43,6 +45,9 @@ currentIndex.value = projectsData.value.length - 1;
       position: relative;
       opacity: 1;
       transition: opacity 2000ms;
+      p {
+        cursor: pointer;
+      }
     }
   }
 }

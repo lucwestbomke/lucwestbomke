@@ -3,7 +3,7 @@
     <nuxt-link to="/" rel="canonical">
       <h1>Luc Westbomke</h1>
     </nuxt-link>
-    <nav :class="{ open: nav_open }">
+    <nav :class="{ open: nav_open }" aria-label="header navigation">
       <div id="nav_menu_btn" @click="toggleNav">
         <span></span>
         <span></span>
@@ -41,7 +41,8 @@ function toggleNav() {
 <style scoped lang="scss">
 #HeaderComponent {
   align-items: flex-start;
-  background-image: linear-gradient(to right, transparent 50%, $storm 50%);
+  // background-color: $black;
+  background-image: linear-gradient(to right, transparent 50%, $black 50%);
   background-size: 200% 100%;
   display: flex;
   justify-content: space-between;
@@ -121,7 +122,7 @@ function toggleNav() {
       }
       ul {
         right: 0;
-        position: fixed;
+        position: absolute;
       }
     }
   }
@@ -150,7 +151,11 @@ function toggleNav() {
 }
 @media (min-width: 1024px) {
   #HeaderComponent {
+    align-items: center;
     margin-bottom: 0px;
+    margin-left: -80px;
+    padding: 20px 80px;
+    width: calc(100% + 160px);
     nav {
       #nav_menu_btn {
         display: none;
@@ -165,6 +170,7 @@ function toggleNav() {
 }
 @keyframes nav-close {
   from {
+    // background-color: $black;
     background-position: 100% 0%;
     height: 100vh;
     margin-bottom: 40px;
@@ -173,6 +179,7 @@ function toggleNav() {
     height: 100vh;
   }
   to {
+    // background-color: $bg-color;
     background-position: 0% 0%;
     height: auto;
     margin-bottom: -86vh;
@@ -180,14 +187,16 @@ function toggleNav() {
 }
 @keyframes nav-open {
   from {
-    height: auto;
+    // background-color: $bg-color;
     background-position: 0% 0%;
+    height: auto;
   }
   1% {
     height: 100vh;
     margin-bottom: -85vh;
   }
   to {
+    // background-color: $black;
     background-position: 100% 0%;
     height: 100vh;
     margin-bottom: 40px;

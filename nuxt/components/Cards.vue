@@ -1,5 +1,5 @@
 <template>
-  <section id="CardsComponent">
+  <div id="CardsComponent">
     <article
       class="card"
       :class="{ first: index === currentIndex }"
@@ -17,14 +17,17 @@
     >
       <!-- <h2>{{ project.title }}</h2> -->
       <!-- <p>{{ project.description.substring(0, 300) }}</p> -->
-      <img :src="project.images[0]" alt="" width="700" draggable="false" />
+      <img :src="project.images[0]" alt="" width="700" height="700" draggable="false" />
     </article>
-  </section>
+  </div>
 </template>
 <script setup lang="ts">
 const data = useProjectData();
 const projectsData = ref(data.value);
 const isSwipeActive = ref(false);
+const animationInProgress = ref(false);
+const currentIndex = useCurrentIndex();
+currentIndex.value = projectsData.value.length - 1;
 const initialMousePosition = ref({
   x: 0,
   y: 0,
@@ -33,21 +36,13 @@ const currentMousePosition = ref({
   x: 0,
   y: 0,
 });
-const animationInProgress = ref(false);
-const currentIndex = useCurrentIndex();
-currentIndex.value = projectsData.value.length - 1;
+
+const cards = ref();
 
 const randomRotation = ref<number[]>([]);
-const cards = ref();
 projectsData.value.forEach(() => {
   randomRotation.value.push(Math.floor(Math.random() * 60 - 30));
 });
-
-function increaseCurrentIndex() {
-  currentIndex.value--;
-  currentIndex.value =
-    ((currentIndex.value % projectsData.value.length) + projectsData.value.length) % projectsData.value.length;
-}
 
 function activateSwipe(event: MouseEvent | TouchEvent) {
   if (animationInProgress.value) return;
@@ -117,6 +112,7 @@ function swipe(event: MouseEvent | TouchEvent) {
   card.style.transform = dPos.x > 0 ? "rotate(6deg)" : "rotate(-6deg)";
   card.style.filter = darkenTransform();
 }
+
 function endSwipe(event: MouseEvent | TouchEvent) {
   if (!isSwipeActive.value || animationInProgress.value) return;
   isSwipeActive.value = false;
@@ -179,6 +175,13 @@ function setZIndices() {
     }
   });
 }
+
+function increaseCurrentIndex() {
+  currentIndex.value--;
+  currentIndex.value =
+    ((currentIndex.value % projectsData.value.length) + projectsData.value.length) % projectsData.value.length;
+}
+
 onMounted(() => {
   cards.value.forEach((card: HTMLDivElement, index: number) => {
     card.style.zIndex = index.toString();
@@ -234,6 +237,8 @@ onMounted(() => {
       animation-name: vanishing-right;
     }
     img {
+      aspect-ratio: 1;
+      height: 100%;
       border-radius: inherit;
       object-fit: cover;
       width: 100%;
