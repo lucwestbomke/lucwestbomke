@@ -1,25 +1,23 @@
 <template>
   <div id="CardsComponent">
-    <div class="cards">
-      <div
-        class="card"
-        v-for="(project, index) in projectsData"
-        :key="index"
-        @mousedown="activateSwipe"
-        @touchstart="activateSwipe"
-        @mousemove="swipe"
-        @touchmove="swipe"
-        @mouseup="endSwipe"
-        @mouseleave="endSwipe"
-        @touchend="endSwipe"
-        @touchcancel="endSwipe"
-        ref="cards"
-      >
-        <h2>{{ project.title }}</h2>
-        <!-- <p>{{ project.description.substring(0, 300) }}</p> -->
-        <!-- <img :src="project.images[0]" alt="" draggable="false" /> -->
-      </div>
-      <div class="card-hidden"></div>
+    <div
+      class="card"
+      :class="{ first: index === currentIndex }"
+      v-for="(project, index) in projectsData"
+      :key="index"
+      @mousedown.passive="activateSwipe"
+      @touchstart.passive="activateSwipe"
+      @mousemove.passive="swipe"
+      @touchmove.passive="swipe"
+      @mouseup.passive="endSwipe"
+      @mouseleave.passive="endSwipe"
+      @touchend.passive="endSwipe"
+      @touchcancel.passive="endSwipe"
+      ref="cards"
+    >
+      <!-- <h2>{{ project.title }}</h2> -->
+      <!-- <p>{{ project.description.substring(0, 300) }}</p> -->
+      <img :src="project.images[0]" alt="" draggable="false" />
     </div>
   </div>
 </template>
@@ -35,8 +33,15 @@ const currentMousePosition = ref({
   x: 0,
   y: 0,
 });
+const animationInProgress = ref(false);
+const currentIndex = useCurrentIndex();
+currentIndex.value = projectsData.value.length - 1;
 
-const currentIndex = ref(projectsData.value.length - 1);
+const randomRotation = ref<number[]>([]);
+const cards = ref();
+projectsData.value.forEach(() => {
+  randomRotation.value.push(Math.floor(Math.random() * 60 - 30));
+});
 
 function increaseCurrentIndex() {
   currentIndex.value--;
@@ -44,9 +49,8 @@ function increaseCurrentIndex() {
     ((currentIndex.value % projectsData.value.length) + projectsData.value.length) % projectsData.value.length;
 }
 
-const cards = ref();
-
 function activateSwipe(event: MouseEvent | TouchEvent) {
+  if (animationInProgress.value) return;
   isSwipeActive.value = true;
   if (event instanceof TouchEvent) {
     initialMousePosition.value = {
@@ -60,10 +64,16 @@ function activateSwipe(event: MouseEvent | TouchEvent) {
     };
   }
   currentMousePosition.value = initialMousePosition.value;
+  const card = cards.value[currentIndex.value];
+  card.style.cursor = "grabbing";
 }
+
 function swipe(event: MouseEvent | TouchEvent) {
-  if (!isSwipeActive.value) return;
-  let dPos;
+  if (!isSwipeActive.value || animationInProgress.value) return;
+  let dPos = {
+    x: 0,
+    y: 0,
+  };
   if (event instanceof TouchEvent) {
     dPos = {
       x: event.touches[0].clientX - currentMousePosition.value.x,
@@ -82,129 +92,210 @@ function swipe(event: MouseEvent | TouchEvent) {
       x: event.clientX,
       y: event.clientY,
     };
-  } else {
-    return;
   }
   if (dPos.x === 0 && dPos.y === 0) return;
   const card = cards.value[currentIndex.value];
-  card.style.left = `${card.offsetLeft + dPos.x}px`;
-  card.style.top = `${card.offsetTop + dPos.y}px`;
+  const dx = +card.style.left.slice(0, -2) ?? 0;
+  const dy = +card.style.top.slice(0, -2) ?? 0;
+  const X_BORDER = 150;
+  const Y_BORDER = 200;
+  const crossedLeftBorder = dx < -X_BORDER;
+  const crossedRightBorder = dx > X_BORDER;
+  const crossedTopBorder = dy < -Y_BORDER;
+  const crossedBottomBorder = dy > Y_BORDER;
+  const darkenTransform = () => {
+    return crossedRightBorder ||
+      ((crossedTopBorder || crossedBottomBorder) && dx >= 0) ||
+      crossedLeftBorder ||
+      ((crossedTopBorder || crossedBottomBorder) && dx <= 0)
+      ? "brightness(.8)"
+      : "";
+  };
+  card.style.left = `${dx + dPos.x}px`;
+  // card.style.top = `${dy + dPos.y}px`;
+  // card.style.top = `${(1 / 10) * Math.abs(dx + dPos.x)}px`;
+  card.style.transform = dPos.x > 0 ? "rotate(6deg)" : "rotate(-6deg)";
+  card.style.filter = darkenTransform();
 }
 function endSwipe(event: MouseEvent | TouchEvent) {
+  if (!isSwipeActive.value || animationInProgress.value) return;
   isSwipeActive.value = false;
+  animationInProgress.value = true;
+  const X_BORDER = 150;
+  const Y_BORDER = 200;
   const card = cards.value[currentIndex.value];
-  if (card.offsetLeft >= 200 || (card.offsetTop >= 250 && card.offsetLeft >= 0)) {
-    card.style.transform = "translate(600px,0)";
-    setZIndices();
+  const dx = +card.style.left.slice(0, -2) ?? 0;
+  const dy = +card.style.top.slice(0, -2) ?? 0;
+  const crossedLeftBorder = dx < -X_BORDER;
+  const crossedRightBorder = dx > X_BORDER;
+  const crossedTopBorder = dy < -Y_BORDER;
+  const crossedBottomBorder = dy > Y_BORDER;
+
+  if (crossedRightBorder || ((crossedTopBorder || crossedBottomBorder) && dx >= 0)) {
+    card.classList.add("vanishing-right");
+    card.style.filter = null;
     setTimeout(() => {
-      card.style.transform = "translate(0,0)";
+      card.style.left = null;
+      card.style.top = null;
+      card.style.transform = null;
+      card.classList.remove("vanishing-right");
+      setZIndices();
+      increaseCurrentIndex();
+      animationInProgress.value = false;
+    }, 2000);
+  } else if (crossedLeftBorder || ((crossedTopBorder || crossedBottomBorder) && dx <= 0)) {
+    card.classList.add("vanishing-left");
+    card.style.filter = null;
+    setTimeout(() => {
+      card.style.left = null;
+      card.style.top = null;
+      card.style.transform = null;
+      card.classList.remove("vanishing-left");
+      setZIndices();
+      increaseCurrentIndex();
+      animationInProgress.value = false;
+    }, 2000);
+  } else {
+    setTimeout(() => {
+      if (card.offsetLeft === 0 && card.offsetTop === 0) return;
+      card.classList.add("transitioning");
       card.style.left = "0px";
       card.style.top = "0px";
-      card.style.transform = null;
-    }, 800);
-  } else if (card.offsetLeft <= -200 || (card.offsetTop >= 250 && card.offsetLeft < 0)) {
-    card.style.transform = "translate(-1600px,0)";
-    setZIndices();
-    setTimeout(() => {
-      card.style.transform = "translate(0,0)";
-      card.style.left = "0px";
-      card.style.top = "0px";
-      card.style.transform = null;
-    }, 1000);
+      card.style.transform = "rotate(0deg)";
+      setTimeout(() => {
+        card.classList.remove("transitioning");
+        animationInProgress.value = false;
+      }, 400);
+    }, 500);
   }
-  setTimeout(() => {
-    if (card.offsetLeft === 0 && card.offsetTop === 0) return;
-    card.classList.add("transitioning");
-    card.style.left = "0px";
-    card.style.top = "0px";
-    setTimeout(() => {
-      card.classList.remove("transitioning");
-    }, 400);
-  }, 500);
-  initialMousePosition.value = {
-    x: 0,
-    y: 0,
-  };
-  currentMousePosition.value = initialMousePosition.value;
+  card.style.cursor = null;
 }
+
 function setZIndices() {
   cards.value.forEach((card: HTMLDivElement, index: number) => {
     card.style.zIndex = (+card.style.zIndex + 1).toString();
     if (index === currentIndex.value) {
       card.style.zIndex = "0";
     }
-    // console.log(
-    //   `Card: ${card.innerText} | Z-Index: ${card.style.zIndex} | CardIndex: ${index} | CurrIndex: ${currentIndex.value}`,
-    // );
   });
-  increaseCurrentIndex();
 }
 onMounted(() => {
   cards.value.forEach((card: HTMLDivElement, index: number) => {
     card.style.zIndex = index.toString();
-    // console.log(
-    //   `Card: ${card.innerText} | Z-Index: ${card.style.zIndex} | CardIndex: ${index} | CurrIndex: ${currentIndex.value}`,
-    // );
   });
 });
 </script>
 <style scoped lang="scss">
 #CardsComponent {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  touch-action: none;
   width: 100%;
-  .cards {
+  .card {
     aspect-ratio: 1;
-    position: relative;
-    max-width: 400px;
-    margin: 0 auto;
-    .card {
-      aspect-ratio: 1;
-      background-color: $rose;
-      border-radius: $border-radius;
-      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-      cursor: grab;
-      display: flex;
-      justify-content: center;
-      left: 0;
-      position: absolute;
-      top: 0;
-      user-select: none;
-      width: 100%;
-      // max-width: 300px;
-      transition: transform 300ms;
-      &:nth-of-type(1) {
-        transform: rotate(10deg);
-      }
-      &:nth-of-type(2) {
-        background-color: $azure;
-      }
-      &:nth-of-type(3) {
-        transform: rotate(10deg);
-        background-color: $tangerine;
-      }
-      &:nth-of-type(4) {
-        background-color: $salmon;
-      }
-      &.transitioning {
-        transition: all 500ms;
-      }
-      img {
-        width: 100%;
-      }
-      &:hover {
-        transform: scale(1.1);
-      }
+    border: 2px solid $white;
+    border-radius: $border-radius;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    cursor: grab;
+    display: flex;
+    justify-content: center;
+    max-width: 275px;
+    position: absolute;
+    transition: transform 500ms, filter 300ms, scale 300ms;
+    user-select: none;
+    width: 100%;
+    &:nth-of-type(1) {
+      background-color: $pink;
     }
-    .card-hidden {
-      aspect-ratio: 1;
-      background-color: $black;
-      left: 0;
-      margin: 0 auto;
-      max-width: 400px;
+    &:nth-of-type(2) {
+      background-color: $azure;
+    }
+    &:nth-of-type(3) {
+      background-color: $storm;
+    }
+    &:nth-of-type(4) {
+      background-color: $salmon;
+    }
+    &.transitioning {
+      transition: all 500ms;
+    }
+    &.first {
       position: relative;
-      right: 0;
-      top: 40px;
-      visibility: hidden;
     }
+    &.vanishing-left {
+      animation-duration: 2s;
+      animation-name: vanishing-left;
+    }
+    &.vanishing-right {
+      animation-duration: 2s;
+      animation-name: vanishing-right;
+    }
+    img {
+      border-radius: inherit;
+      object-fit: cover;
+      width: 100%;
+    }
+  }
+}
+@media (min-width: 768px) {
+  #CardsComponent {
+    .card {
+      max-width: 400px;
+    }
+  }
+}
+@media (min-width: 1024px) {
+  #CardsComponent {
+    .card {
+      max-width: 550px;
+    }
+  }
+}
+@keyframes vanishing-left {
+  from {
+  }
+  10% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(0);
+  }
+  49% {
+    transform: translate(-1600px, 0px) scale(0);
+  }
+  50% {
+    transform: translate(-1600px, 0px) scale(1);
+  }
+  to {
+    transform: translate(0px, 0px);
+    left: unset;
+    top: unset;
+    z-index: -1;
+  }
+}
+@keyframes vanishing-right {
+  from {
+  }
+  10% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(0);
+  }
+  49% {
+    transform: translate(1000px, 0px) scale(0);
+  }
+  50% {
+    transform: translate(1000px, 0px) scale(1);
+  }
+  to {
+    transform: translate(0px, 0px);
+    left: unset;
+    top: unset;
+    z-index: 0;
   }
 }
 </style>
