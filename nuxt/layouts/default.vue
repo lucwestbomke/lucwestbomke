@@ -2,7 +2,7 @@
   <div id="DefaultLayout">
     <Header />
     <slot />
-    <div id="FooterComponent">sadfasf</div>
+    <Footer />
   </div>
 </template>
 <script setup lang="ts"></script>
@@ -21,7 +21,7 @@
   //   flex: 1 1 auto;
   // }
   #FooterComponent {
-    flex: 0 1 40px;
+    flex: 0 1 auto;
     color: $white;
   }
 }

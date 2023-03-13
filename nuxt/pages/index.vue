@@ -23,7 +23,6 @@ function returnLink(site: "github" | "linkedin" | "twitter") {
 </script>
 <style scoped lang="scss">
 #IndexPage {
-  flex: 1 1 auto;
   align-items: center;
   display: flex;
   flex-direction: column;

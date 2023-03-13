@@ -20,6 +20,9 @@ a {
 // [id$="Layout"] {
 //   min-height: 100vh;
 // }
+[id$="Page"] {
+  flex: 1 1 auto;
+}
 h1,
 h2,
 h3,
@@ -29,7 +32,8 @@ h6,
 li,
 p,
 header,
-span {
+span,
+a {
   color: $white;
 }
 
