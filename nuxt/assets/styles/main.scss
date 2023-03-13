@@ -1,0 +1,54 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Comfortaa", Arial, Helvetica, sans-serif;
+  font-variation-settings: "wght" 400;
+}
+body {
+  background-color: $bg-color;
+}
+ul {
+  list-style-type: none;
+}
+li {
+  list-style-type: none;
+}
+a {
+  text-decoration: none;
+}
+// [id$="Layout"] {
+//   min-height: 100vh;
+// }
+[id$="Page"] {
+  flex: 1 1 auto;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li,
+p,
+header,
+span,
+a {
+  color: $white;
+}
+
+@font-face {
+  font-family: "Comfortaa";
+  src: local("Comfortaa"), url("@/assets/styles/fonts/comfortaa-variable.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manrope";
+  src: local("Manrope"), url("@/assets/styles/fonts/manrope-variable.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "PlusJakarta";
+  src: local("PlusJakarta"), url("@/assets/styles/fonts/plus_jakarta_sans-variable.ttf") format("truetype");
+  font-display: swap;
+}
