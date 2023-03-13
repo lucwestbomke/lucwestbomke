@@ -10,16 +10,16 @@ services:
     command: sh -c "node .output/server/index.mjs"
     stdin_open: true
     tty: true
-  api:
-    image: lucwestbomke-prod-api:latest
-    build:
-      context: ./api
-      dockerfile: ../config/api/Dockerfile.prod
-    container_name: api-prod
-    restart: always
-    command: uvicorn main:app --host 0.0.0.0 --port 9988
-    depends_on:
-      - nuxt
+  # api:
+  #   image: lucwestbomke-prod-api:latest
+  #   build:
+  #     context: ./api
+  #     dockerfile: ../config/api/Dockerfile.prod
+  #   container_name: api-prod
+  #   restart: always
+  #   command: uvicorn main:app --host 0.0.0.0 --port 9988
+  #   depends_on:
+  #     - nuxt
   nginx:
     image: lucwestbomke-prod-nginx:latest
     build:
@@ -31,4 +31,4 @@ services:
       - "80:80"
     depends_on:
       - nuxt
-      - api
+      # - api
