@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  nuxt:
+    image: lucwestbomke/lucwestbomke-prod-nuxt:latest
+    container_name: nuxt-prod
+    restart: always
+    command: sh -c "node .output/server/index.mjs"
+    stdin_open: true
+    tty: true
+  nginx:
+    image: lucwestbomke/lucwestbomke-prod-nginx:latest
+    container_name: nginx-prod
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - nuxt
