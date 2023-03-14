@@ -1,0 +1,12 @@
+version: "3.8"
+services:
+  nuxt:
+    image: lucwestbomke/lucwestbomke-prod-nuxt:latest
+    build:
+      context: ./nuxt
+      dockerfile: ../config/nuxt/Dockerfile.prod
+  nginx:
+    image: lucwestbomke/lucwestbomke-prod-nginx:latest
+    build:
+      context: ./nginx
+      dockerfile: ../config/nginx/Dockerfile.prod

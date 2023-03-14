@@ -1,0 +1,15 @@
+build_and_deploy:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout the repo
+      uses: actions/checkout@v3
+    # - name: Create .env file
+    #   run: |
+    #     touch .env
+    #     echo "${{ secrets.ENV_PROD }}" > .env
+    #     cat .env
+    - name: Build images
+      run: docker-compose -f docker-compose.build.yml build
+
+    - name: Push image to Docker Hub
+      run: docker-compose -f docker-compose.prod.yml push
