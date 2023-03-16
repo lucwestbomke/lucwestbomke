@@ -29,6 +29,6 @@ services:
     restart: always
     ports:
       - "80:80"
-    depends_on:
-      - nuxt
-      # - api
+    # depends_on:
+    #   - nuxt
+    # - api
