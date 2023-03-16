@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           port: 22
           key: ${{ secrets.DEPLOY_KEY }}
-          passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
+          # passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           source: "docker-compose.deploy.yml"
           rm: true
           target: "/opt/dcup"
@@ -47,7 +47,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
           key: ${{ secrets.DEPLOY_KEY }}
-          passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
+          # passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           port: 22
           envs: username, password
           script: |
