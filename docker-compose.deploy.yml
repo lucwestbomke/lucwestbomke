@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  nuxt:
+    image: lucwestbomke/lucwestbomke-prod-nuxt:latest
+    container_name: nuxt
+    restart: always
+    command: sh -c "node .output/server/index.mjs"
+    stdin_open: true
+    tty: true
+  nginx:
+    image: lucwestbomke/lucwestbomke-prod-nginx:latest
+    container_name: nginx
+    restart: always
+    volumes:
+      - ./certbot/www:/var/www/certbot/:ro
+      - ./certbot/conf/:/etc/nginx/ssl/:ro
+    ports:
+      - "80:80"
+      - "443:443"
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - ./certbot/www/:/var/www/certbot/:rw
+      - ./certbot/conf/:/etc/letsencrypt/:rw
