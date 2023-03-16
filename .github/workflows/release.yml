@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           port: 22
           key: ${{ secrets.DEPLOY_KEY }}
-          source: "./docker-compose.deploy.yml"
+          source: "../../docker-compose.deploy.yml"
           target: "~/"
           overwrite: true
       - name: Pull and run images
