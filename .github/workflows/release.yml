@@ -25,21 +25,21 @@ jobs:
     runs-on: ubuntu-22.04
     # if: ${{ github.event.workflow_run.conclusion != 'failure' }}
     steps:
-      - name: Checkout the repo
-        uses: actions/checkout@v3
-      - name: Copy docker-compose file
-        uses: appleboy/scp-action@v0.1.3
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USERNAME }}
-          port: 22
-          key: ${{ secrets.DEPLOY_KEY }}
-          passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
-          source: "docker-compose.deploy.yml"
-          rm: true
-          target: "/opt/dcup"
+      # - name: Checkout the repo
+      #   uses: actions/checkout@v3
+      # - name: Copy docker-compose file
+      #   uses: appleboy/scp-action@v0.1.3
+      #   with:
+      #     host: ${{ secrets.DEPLOY_HOST }}
+      #     username: ${{ secrets.DEPLOY_USERNAME }}
+      #     port: 22
+      #     key: ${{ secrets.DEPLOY_KEY }}
+      #     passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
+      #     source: "docker-compose.deploy.yml"
+      #     rm: true
+      #     target: "/opt/dcup"
       - name: Pull and run images
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@master
         with:
           host: "167.172.171.194"
           username: root
