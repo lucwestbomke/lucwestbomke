@@ -51,6 +51,8 @@ jobs:
           port: 22
           envs: username, password
           script: |
+            echo $password
+            echo $username
             echo $passowrd | docker login -u $username --password-stdin
             docker stop -t 5 $(docker ps -q)
             docker system prune -a
