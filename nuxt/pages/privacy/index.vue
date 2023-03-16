@@ -75,7 +75,6 @@
       <NuxtLink to="https://www.digitalocean.com/legal/privacy-policy/."
         >https://www.digitalocean.com/<wbr />legal/privacy-policy/</NuxtLink
       >.
-      <!-- https://www.digitalocean.com/legal/privacy-policy/. -->
     </p>
     <h2>3. Allgemeine Hinweise und Pflicht­informationen</h2>
     <h3>Datenschutz</h3>
