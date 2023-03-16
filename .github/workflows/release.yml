@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Push image to Docker Hub
-        run: docker-compose -f docker-compose.prod.yml push
+        run: docker-compose -f docker-compose.build.yml push
   deploy:
     needs: build
     runs-on: ubuntu-22.04
