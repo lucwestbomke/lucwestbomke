@@ -27,9 +27,6 @@ jobs:
     steps:
       - name: Checkout the repo
         uses: actions/checkout@v3
-      - name: List files
-        run: ls -a
-        shell: bash
       - name: Copy docker-compose file
         uses: appleboy/scp-action@v0.1.3
         with:
@@ -37,6 +34,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           port: 22
           key: ${{ secrets.DEPLOY_KEY }}
+          passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           source: "docker-compose.deploy.yml"
           rm: true
           target: "/opt/dcup"
@@ -49,6 +47,7 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
           key: ${{ secrets.DEPLOY_KEY }}
+          passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           port: 22
           envs: username, password
           script: |
