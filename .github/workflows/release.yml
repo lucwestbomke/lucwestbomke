@@ -46,16 +46,10 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USERNAME }}
+          port: 22
           key: ${{ secrets.DEPLOY_KEY }}
           passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
-          port: 22
           envs: username, password
           script: |
-            echo $password
-            echo $username
-            echo $passowrd | docker login -u $username --password-stdin
-            docker stop -t 5 $(docker ps -q)
-            docker system prune -a
-            docker-compose -f /opt/dcup/docker-compose.deploy.yml pull
-            docker-compose -f /opt/dcup/docker-compose.deploy.yml up nuxt nginx
-
+            whomai
+            ls -al
