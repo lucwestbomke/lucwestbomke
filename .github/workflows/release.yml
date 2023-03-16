@@ -32,9 +32,9 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           port: 22
           key: ${{ secrets.DEPLOY_KEY }}
-          source: "../../docker-compose.deploy.yml"
-          target: "~/"
-          overwrite: true
+          source: "docker-compose.deploy.yml"
+          rm: true
+          target: "/opt/dcup"
       - name: Pull and run images
         uses: appleboy/ssh-action@v0.1.5
         env:
@@ -50,5 +50,5 @@ jobs:
             echo $passowrd | docker login -u $username --password-stdin
             docker stop -t 5 $(docker ps -q)
             docker system prune -a
-            docker-compose -f ~/docker-compose.deploy.yml pull
-            docker-compose -f ~/docker-compose.deploy.yml up nuxt nginx
+            docker-compose -f /opt/dcup/docker-compose.deploy.yml pull
+            docker-compose -f /opt/dcup/docker-compose.deploy.yml up nuxt nginx
