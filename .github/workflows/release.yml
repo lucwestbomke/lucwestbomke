@@ -51,7 +51,4 @@ jobs:
           passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           envs: username, password
           script: |
-            docker stop -t 5 $(docker ps -q)
-            docker system prune -a | Y
             docker compose -f /opt/dcup/docker-compose.deploy.yml pull
-            docker compose -f /opt/dcup/docker-compose.deploy.yml up nuxt nginx
