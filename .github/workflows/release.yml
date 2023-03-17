@@ -44,13 +44,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USERNAME }}
+          username: root
           port: 22
           key: ${{ secrets.DEPLOY_KEY }}
           passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           envs: username, password
           script: |
             docker stop -t 5 $(docker ps -q)
-            docker system prune -a | echo Y
             docker compose -f /opt/dcup/docker-compose.deploy.yml pull
             docker compose -f /opt/dcup/docker-compose.deploy.yml up -d

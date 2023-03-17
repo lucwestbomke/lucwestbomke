@@ -10,7 +10,7 @@ services:
   nginx:
     image: lucwestbomke/lucwestbomke-prod-nginx:latest
     container_name: nginx
-    command: chmod -R 600 /etc/nginx/ssl
+    # command: chmod -R 600 /etc/nginx/ssl
     restart: always
     volumes:
       - ./certbot/www:/var/www/certbot/
