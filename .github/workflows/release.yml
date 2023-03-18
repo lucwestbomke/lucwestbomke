@@ -39,16 +39,12 @@ jobs:
           target: "/opt/dcup"
       - name: Pull and run images
         uses: appleboy/ssh-action@v0.1.5
-        env:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
-          username: root
+          username: ${{ secrets.DEPLOY_USERNAME }}
           port: 22
           key: ${{ secrets.DEPLOY_KEY }}
           passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
-          envs: username, password
           script: |
             docker stop -t 5 $(docker ps -q)
             docker compose -f /opt/dcup/docker-compose.deploy.yml pull
