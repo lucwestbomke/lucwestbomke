@@ -46,6 +46,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           script: |
-            docker stop -t 5 $(docker ps -q)
             docker compose -f /opt/dcup/docker-compose.deploy.yml pull
+            docker kill $(docker ps -q)
             docker compose -f /opt/dcup/docker-compose.deploy.yml up -d
+            docker system prune -af
