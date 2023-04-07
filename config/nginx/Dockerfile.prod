@@ -13,6 +13,8 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && \
     && cp ./target/debug/libquiche.so /usr/lib/ \
     && cp ./target/debug/libquiche.a /usr/lib/ \
     && cp -R ./include/* /usr/include/
+    
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 COPY ./ /etc/nginx/
 
