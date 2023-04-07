@@ -1,7 +1,6 @@
 <template>
-  <footer id="FooterComponent">
+  <footer id="FooterComponent" aria-label="footer navigation">
     <p>&#169; {{ new Date().getUTCFullYear() }} Luc Westbomke</p>
-    <section aria-label="footer navigation">
       <ul>
         <li>
           <NuxtLink to="/legal">Legal</NuxtLink>
@@ -13,7 +12,6 @@
           <NuxtLink to="/sitemap">Sitemap</NuxtLink>
         </li>
       </ul>
-    </section>
   </footer>
 </template>
 <script setup lang="ts"></script>
@@ -29,14 +27,12 @@
   margin-left: -20px;
   padding: 20px;
   width: calc(100% + 40px);
-  section {
-    ul {
-      align-items: center;
-      gap: 16px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-    }
+  ul {
+    align-items: center;
+    gap: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
   }
 }
 @media (min-width: 768px) {

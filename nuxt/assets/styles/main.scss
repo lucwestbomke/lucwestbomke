@@ -39,16 +39,22 @@ a {
 
 @font-face {
   font-family: "Comfortaa";
-  src: local("Comfortaa"), url("@/assets/styles/fonts/comfortaa-variable.ttf") format("truetype");
+  src: local("Comfortaa"), url("@/assets/styles/fonts/comfortaa-variable.woff2") format("woff2"),
+    url("@/assets/styles/fonts/comfortaa-variable.woff") format("woff"),
+    url("@/assets/styles/fonts/comfortaa-variable.ttf") format("truetype");
   font-display: swap;
 }
 @font-face {
   font-family: "Manrope";
-  src: local("Manrope"), url("@/assets/styles/fonts/manrope-variable.ttf") format("truetype");
+  src: local("Manrope"), url("@/assets/styles/fonts/manrope-variable.woff2") format("woff2"),
+    url("@/assets/styles/fonts/manrope-variable.woff") format("woff"),
+    url("@/assets/styles/fonts/manrope-variable.ttf") format("truetype");
   font-display: swap;
 }
 @font-face {
   font-family: "PlusJakarta";
-  src: local("PlusJakarta"), url("@/assets/styles/fonts/plus_jakarta_sans-variable.ttf") format("truetype");
+  src: local("PlusJakarta"), url("@/assets/styles/fonts/plus_jakarta_sans-variable.woff2") format("woff2"),
+    url("@/assets/styles/fonts/plus_jakarta_sans-variable.woff") format("woff"),
+    url("@/assets/styles/fonts/plus_jakarta_sans-variable.ttf") format("truetype");
   font-display: swap;
 }

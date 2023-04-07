@@ -3,8 +3,8 @@
     <nuxt-link to="/" rel="canonical">
       <h1>Luc Westbomke</h1>
     </nuxt-link>
-    <nav :class="{ open: nav_open }" aria-label="header navigation">
-      <div id="nav_menu_btn" @click="toggleNav">
+    <nav :class="{ open: nav_open }" aria-label="main navigation">
+      <div id="nav_menu_btn" @click="toggleNav" aria-hidden="true">
         <span></span>
         <span></span>
         <span></span>
