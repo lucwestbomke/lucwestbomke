@@ -1,6 +1,6 @@
 FROM nginx:1.23
 
-RUN apt-get update && apt-get install -y openssl libssl-dev git
+RUN apt-get update && apt-get install -y openssl libssl-dev git cargo
 
 RUN cd /tmp \
     && git clone https://github.com/cloudflare/quiche.git \
