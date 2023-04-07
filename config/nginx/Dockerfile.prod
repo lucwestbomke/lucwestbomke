@@ -1,30 +1,16 @@
-FROM nginx:1.23 AS build
-
-WORKDIR /src
-RUN apt-get update && \
-    apt-get install -y git gcc make g++ cmake perl libunwind-dev golang-go=1.19 && \
-    git clone https://boringssl.googlesource.com/boringssl && \
-    mkdir boringssl/build && \
-    cd boringssl/build && \
-    cmake .. && \
-    make
-
-RUN apt-get install -y mercurial libperl-dev libpcre3-dev zlib1g-dev libxslt1-dev libgd-ocaml-dev libgeoip-dev && \
-    hg clone https://hg.nginx.org/nginx-quic   && \
-    hg clone http://hg.nginx.org/njs -r "0.6.2" && \
-    cd nginx-quic && \
-    hg update quic && \
-    auto/configure `nginx -V 2>&1 | sed "s/ \-\-/ \\\ \n\t--/g" | grep "\-\-" | grep -ve opt= -e param= -e build=` \
-                   --build=nginx-quic --with-debug  \
-                   --with-http_v3_module --with-stream_quic_module \
-                   --with-cc-opt="-I/src/boringssl/include" --with-ld-opt="-L/src/boringssl/build/ssl -L/src/boringssl/build/crypto" && \
-    make
-
 FROM nginx:1.23
 
-COPY --from=build /src/nginx-quic/objs/nginx /usr/sbin
+RUN apt-get update && apt-get install -y openssl libssl-dev
 
-RUN /usr/sbin/nginx -V > /dev/stderr
+RUN cd /tmp \
+    && git clone https://github.com/cloudflare/quiche.git \
+    && cd quiche \
+    && QUICHE_BSSL_PATH=`pwd`/../boringssl \
+    && LD_LIBRARY_PATH=$QUICHE_BSSL_PATH/target/debug:$LD_LIBRARY_PATH \
+    && cargo build --manifest-path ./http3/Cargo.toml --features ffi \
+    && cp ./target/debug/libquiche.so /usr/lib/ \
+    && cp ./target/debug/libquiche.a /usr/lib/ \
+    && cp -R ./include/* /usr/include/
 
 COPY ./ /etc/nginx/
 
