@@ -1,6 +1,6 @@
-FROM nginx:1.23
+FROM nginx:1.23-alpine-slim
 
-RUN apt-get update && apt-get install -y openssl libssl-dev
+RUN apt-get update && apt-get install -y openssl libssl-dev git
 
 RUN cd /tmp \
     && git clone https://github.com/cloudflare/quiche.git \
