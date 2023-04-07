@@ -24,6 +24,8 @@ FROM nginx:1.23-alpine-slim
 
 COPY --from=build /src/nginx-quic/objs/nginx /usr/sbin
 
+RUN /usr/sbin/nginx -V > /dev/stderr
+
 COPY ./ /etc/nginx/
 
 EXPOSE 80
