@@ -16,7 +16,8 @@ services:
       - ./certbot/conf/:/etc/nginx/ssl/:ro
     ports:
       - "80:80"
-      - "443:443"
+      - "443:443/tcp"
+      - "443:443/udp"
   certbot:
     image: certbot/certbot:latest
     volumes:

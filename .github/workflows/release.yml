@@ -47,6 +47,6 @@ jobs:
           passphrase: ${{ secrets.DEPLOY_PASSPHRASE }}
           script: |
             docker compose -f /opt/dcup/docker-compose.deploy.yml pull -q
-            docker compose -f /opt/dcup/docker-compose.deploy.yml stop $(docker ps -q)
+            docker compose -f /opt/dcup/docker-compose.deploy.yml down
             docker compose -f /opt/dcup/docker-compose.deploy.yml up -d
             docker system prune -af
