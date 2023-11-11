@@ -20,6 +20,16 @@ function returnLink(site: "github" | "linkedin" | "twitter") {
   }
   return link;
 }
+
+if (import.meta.vitest) {
+  const { describe, expect, it } = import.meta.vitest;
+
+  describe("#returnLink", () => {
+    it("test for github", () => {
+      expect(returnLink("github")).toBe("https://github.com/lucwestbomke");
+    });
+  });
+}
 </script>
 <style scoped lang="scss">
 #IndexPage {

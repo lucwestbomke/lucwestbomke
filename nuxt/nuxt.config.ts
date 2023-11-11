@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import Vue from "@vitejs/plugin-vue";
 export default defineNuxtConfig({
   app: {
     head: {
@@ -58,6 +59,18 @@ export default defineNuxtConfig({
   },
   css: ["@/assets/styles/main.scss"],
   vite: {
+    plugins: [Vue()],
+    define: {
+      "import.meta.vitest": "undefined",
+    },
+    test: {
+      globals: true,
+      includeSource: ["./tests/**/*.{js,ts}"],
+      // exclude: ["./assets/**.{js,ts}", "./.nuxt/**.{js,ts}", "./.output/**.{js,ts}", "./.coverage/**.{js,ts}"],
+      coverage: {
+        reporter: ["text"],
+      },
+    },
     build: {
       minify: "terser",
       terserOptions: {
